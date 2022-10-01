@@ -1,6 +1,7 @@
 const MAIN_OBJ = {
 	/**declare your all variables inside the function and return an object of all variable  */
 
+	// hello world
 	global_var: {
 		show_soldout: false,
 		limit: 5,
