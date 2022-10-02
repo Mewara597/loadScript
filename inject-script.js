@@ -1,7 +1,7 @@
 const MAIN_OBJ = {
 	/**declare your all variables inside the function and return an object of all variable  */
 
-	// hello world
+	// hello world 
 	global_var: {
 		show_soldout: false,
 		limit: 5,
@@ -47,15 +47,23 @@ const MAIN_OBJ = {
 	/**use json array of multiple given handles */
 	get_json_obj: async function () {
 		let json_obj = await MAIN_OBJ.fetch_handle_response(MAIN_OBJ.global_var.all_proucts_handle),
-			required_div_arr = [];
+			required_div_arr = [],
+			json_obj_with_id = {}
+
+		json_obj.forEach(each_obj => {
+			json_obj_with_id[each_obj.id] = json_obj
+		})
+
+
+		console.log(json_obj_with_id);
 
 		/**get array of divs which are ready to insert */
 		json_obj.forEach((each_response_obj) => {
 			MAIN_OBJ.global_var.show_soldout
 				? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
 				: each_response_obj.available
-				? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
-				: console.log(`${each_response_obj.handle} product is soldOut`);
+					? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
+					: console.log(`${each_response_obj.handle} product is soldOut`);
 		});
 
 		/** filter array with limit */
@@ -72,8 +80,14 @@ const MAIN_OBJ = {
 
 		MAIN_OBJ.change_featured_image_on_event(json_obj);
 
-		MAIN_OBJ.on_mouseOver();
-	},
+		MAIN_OBJ.create_popup()
+
+		MAIN_OBJ.create_modal()
+
+		// MAIN_OBJ.on_mouseOver(json_obj_with_id);
+	}
+	,
+
 
 	/**create div for each Json Obj */
 	create_div_to_show: function (each_response_obj) {
@@ -102,15 +116,21 @@ const MAIN_OBJ = {
 						</div>`,
 		};
 		variant_image_block = {
+			va: each_response_obj,
 			checkbox: `<div class ='checkbox_${each_response_obj.id}'>
 							<input type="checkbox" id='checkbox_${each_response_obj.id}' name='checkbox_${each_response_obj.id}' value="product">
 							<label for="checkbox_${each_response_obj.id}"> </label>
 						</div> `,
 
-			feature_image: `<div class='featured_image'  > 
-									<button type="button" style="display:none;" >quick view</button>
-									<img src ='${featured_image}' onmouseover='MAIN_OBJ.on_mouseOver()' width='100px' height='100px' >
-								</div>`,
+			feature_image: `<div class='featured_image' onmouseover = "MAIN_OBJ.mouse_over(this)" onmouseout = "MAIN_OBJ.mouse_out(this)" > 
+								<img id= '${each_response_obj.id}' src ='${featured_image}' " width='100px' height='100px'  >
+								<div id='quick-view-${each_response_obj.id}' style="display:none; position: relative;
+								top: -110px;
+								background: aliceblue;
+								cursor:pointer;
+								border: 2px solid black;">quick view</div>
+								
+							</div>`,
 		};
 
 		let product_div = `<div class='${each_response_obj.handle}' style="margin-top: 5px; border: 2px solid black; display: flex;">
@@ -120,7 +140,10 @@ const MAIN_OBJ = {
 								<div class = 'product_details-content-div'  style="margin-left: 20px; margin-right: 20px">
 									${MAIN_OBJ.global_var.sequence_of_prod_div.map((seq_elem) => prod_detail_block[seq_elem]).join("")}
 								</div>
+								
+								</div>
 							</div>`;
+
 
 		return product_div;
 	},
@@ -141,7 +164,7 @@ const MAIN_OBJ = {
 		});
 	},
 
-	/** this function is called inside change featured image and src is updating in this function */
+	/** this function is called inside chcurrentTargetange featured image and src is updating in this function */
 	change_img_src: function (json_obj, value_of_opt) {
 		let got_id = false;
 		// let featured_image_url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpN4PyRQO8oBuhiveHS9F2iBJH-gpNkeDWvSPChDLb&s";
@@ -151,24 +174,56 @@ const MAIN_OBJ = {
 				each_var.id == value_of_opt
 					? each_var.featured_image
 						? ((document.querySelector(`.${json_ob.handle} img`).src = each_var.featured_image.src),
-						  console.log(value_of_opt),
-						  (got_id = true))
+							console.log(value_of_opt),
+							(got_id = true))
 						: ((document.querySelector(`.${json_ob.handle} img`).src = json_ob.featured_image),
-						  console.log(value_of_opt),
-						  (got_id = true))
+							console.log(value_of_opt),
+							(got_id = true))
 					: "";
 			});
 		});
 	},
 	changeSrc: function (json_ob) {
 		console.log('hello');
-		
+
 	},
 
-	on_mouseOver: function (){
-		console.log('mouse upr aagya');
-			let show_quick_view_btn  = document.querySelector('.featured_image button').style.display = ''
+	mouse_over: function (obj) {
+		const x = obj.querySelector("img")
+		document.querySelector(`#quick-view-${x.id}`).style.display = "block"
+
 	},
+	mouse_out: function (obj) {
+		const x = obj.querySelector("img")
+		document.querySelector(`#quick-view-${x.id}`).style.display = "none"
+
+	},
+
+	create_popup: function () {
+		document.querySelectorAll("[id^='quick-view-']").forEach(button => {
+			button.addEventListener("click", (event) => {
+				console.log("clicked", event.currentTarget.id)
+			})
+
+		})
+	},
+
+	create_modal: function () {
+		let modal = `<div id="myModal" class="modal" style='display:block; position:fixed; z-index:1;left: 0;
+		top:0;width:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4);'>
+						<div class="modal-content">
+							<span class="close" style='color: #aaa;
+							float: right;
+							font-size: 28px;
+  							font-weight: bold;'>&times;</span>
+							<p>Some text in the Modal..</p>
+						</div>
+					</div>`
+		// document.querySelector('.spice_block').insertAdjacentHTML('beforeend',modal)
+
+		
+	}
+
 };
 (function () {
 	MAIN_OBJ.init();
