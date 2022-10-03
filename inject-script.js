@@ -82,7 +82,7 @@ const MAIN_OBJ = {
 
 		MAIN_OBJ.create_popup()
 
-		MAIN_OBJ.create_modal()
+		
 
 		// MAIN_OBJ.on_mouseOver(json_obj_with_id);
 	}
@@ -124,7 +124,7 @@ const MAIN_OBJ = {
 
 			feature_image: `<div class='featured_image' onmouseover = "MAIN_OBJ.mouse_over(this)" onmouseout = "MAIN_OBJ.mouse_out(this)" > 
 								<img id= '${each_response_obj.id}' src ='${featured_image}' " width='100px' height='100px'  >
-								<div id='quick-view-${each_response_obj.id}' style="display:none; position: relative;
+								<div id='quick-view-${each_response_obj.id}' value='${each_response_obj.id}' style="display:none; position: relative;
 								top: -110px;
 								background: aliceblue;
 								cursor:pointer;
@@ -134,11 +134,18 @@ const MAIN_OBJ = {
 		};
 
 		let product_div = `<div class='${each_response_obj.handle}' style="margin-top: 5px; border: 2px solid black; display: flex;">
-								<div class='image_div' style="margin-right: 10px">
+								<div class='image_div' style="margin-right: 10px;">
 									${MAIN_OBJ.global_var.sequence_of_prod_div.map((seq_elem) => variant_image_block[seq_elem]).join("")}								
 								</div>
 								<div class = 'product_details-content-div'  style="margin-left: 20px; margin-right: 20px">
 									${MAIN_OBJ.global_var.sequence_of_prod_div.map((seq_elem) => prod_detail_block[seq_elem]).join("")}
+								</div>
+								<div class='modal-div' id='modal-id-${each_response_obj.id}' style="display:none; position: fixed;margin-top: 50%; z-index:1; padding-top:100px; left:0; top:0; width:100%; height:100%; overflow:auto;">
+									<div class='modal-content' style='margin:auto; padding:20px; border:1px solid black;  width:60%; border-radius:7px;'>
+										<span class='close-modal' id='close-${each_response_obj.id}' style='float:right;border:1px solid black; cursor:pointer; font-size:28px; font-weight:bold;'>x</span>
+										<div class='modal-left'> images </div>
+										<div class='modal-right'>Img description </div>
+									</div>
 								</div>
 								
 								</div>
@@ -202,27 +209,22 @@ const MAIN_OBJ = {
 	create_popup: function () {
 		document.querySelectorAll("[id^='quick-view-']").forEach(button => {
 			button.addEventListener("click", (event) => {
-				console.log("clicked", event.currentTarget.id)
-			})
+				// console.log("clicked", event.currentTarget.id.split('-')[2])
+				document.querySelector(`#modal-id-${event.currentTarget.id.split('-')[2]}`).style.display = 'block';			
+				})
 
 		})
+		document.querySelectorAll('.close-modal').forEach(modal=>{
+			modal.addEventListener('click' ,(event)=>{
+				console.log(event.currentTarget.id);
+				document.querySelector(`#modal-id-${event.currentTarget.id.split('-')[1]}`).style.display = 'none';	
+
+			})
+		})
+
 	},
 
-	create_modal: function () {
-		let modal = `<div id="myModal" class="modal" style='display:block; position:fixed; z-index:1;left: 0;
-		top:0;width:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4);'>
-						<div class="modal-content">
-							<span class="close" style='color: #aaa;
-							float: right;
-							font-size: 28px;
-  							font-weight: bold;'>&times;</span>
-							<p>Some text in the Modal..</p>
-						</div>
-					</div>`
-		// document.querySelector('.spice_block').insertAdjacentHTML('beforeend',modal)
 
-		
-	}
 
 };
 (function () {
