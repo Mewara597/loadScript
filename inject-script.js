@@ -216,25 +216,25 @@ const MAIN_OBJ = {
 			<div class='product-detail-div' style="display: flex;">
 				<div class='right-content-div'>
 					<div class = 'main-image-div'>	
-					<img src='${each_response_obj.featured_image}' style='height=70px; width:50px'>
+					<img src='${each_response_obj.featured_image}' style='height=100px; width:80px'>
 					</div>
 					<div class ='variant-image-div' style="width: 189px;"> 
 					${each_response_obj.images.map((img_src) => `<img  src=${img_src} style='height:60px;width: 50px;padding: 2px;'>`).join("")}
 					</div>
 				</div>
 				<div class='left-content-div'>
-					<div class='product-detail'>
-						<div class='product-description-div'>
+					<div class='product-detail' >
+						<div class='product-description-div' style="overflow: overlay;height: 172px;">
 							<span>
 								description: ${each_response_obj.description}
 							</span>
 						</div>
-						<div>
+						<div style="margin-top: 10px;">
 							${
 								each_response_obj.compare_at_price ? 
-								(`<p>compared price: ${each_response_obj.compare_at_price} </p>` 
-								,`<p>price : ${each_response_obj.price}</p>`): 
-								`<p>price : ${each_response_obj.price}</p>`
+								(`<p>price : ${each_response_obj.price}</p>`):								
+								`<p>compared price: ${each_response_obj.compare_at_price} </p>` 
+								,`<p>price : ${each_response_obj.price}</p>`
 
 							}
 						</div>
