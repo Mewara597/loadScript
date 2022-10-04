@@ -219,24 +219,18 @@ const MAIN_OBJ = {
 					<img src='${each_response_obj.featured_image}' style='height=100px; width:80px'>
 					</div>
 					<div class ='variant-image-div' style="width: 189px;"> 
-					${each_response_obj.images.map((img_src) => `<img  src=${img_src} style='height:60px;width: 50px;padding: 2px;'>`).join("")}
+					${each_response_obj.images.map((img_src,index) => `<img  src=${img_src} media-index=${index} style='height:60px;width: 50px;padding: 2px;'>`).join("")}
 					</div>
 				</div>
 				<div class='left-content-div'>
 					<div class='product-detail' >
-						<div class='product-description-div' style="overflow: overlay;height: 172px;">
+						<div class='product-description-div' style="overflow: overlay;height: 172px;width: 232px;">
 							<span>
 								description: ${each_response_obj.description}
 							</span>
 						</div>
-						<div style="margin-top: 10px;">
-							${
-								each_response_obj.compare_at_price ? 
-								(`<p>price : ${each_response_obj.price}</p>`):								
-								`<p>compared price: ${each_response_obj.compare_at_price} </p>` 
-								,`<p>price : ${each_response_obj.price}</p>`
-
-							}
+						<div class='price-description-div' style="margin-top: 10px;">
+							
 						</div>
 
 					</div>
@@ -257,11 +251,34 @@ const MAIN_OBJ = {
 		document.querySelectorAll(".variant-image-div img").forEach((img_tag) => {
 			// console.log(img_tag)
 			img_tag.addEventListener("click", (event) => {
-				
+				console.log(event.currentTarget.getAttribute('media-index'));
+				// MAIN_OBJ._setActiveIndicator(event.currentTarget.getAttribute('media-index'))
+				// event.currentTarget.style.border = '2px solid black';
 				document.querySelector(".main-image-div img").src = event.currentTarget.src;
 			});
 		});
 	},
+
+	// _setActiveIndicator: function(index) {
+	// 	this.indicators.forEach(function(indicatorWrapper) {
+	// 	  var activeIndicator = indicatorWrapper.querySelector(
+	// 		'.' + classes.indicatorActive
+	// 	  );
+  
+	// 	  var nextIndicator = indicatorWrapper.childNodes[index];
+  
+	// 	  if (activeIndicator) {
+	// 		activeIndicator.setAttribute('aria-selected', false);
+	// 		activeIndicator.classList.remove(classes.indicatorActive);
+	// 		activeIndicator.firstElementChild.removeAttribute('aria-current');
+	// 	  }
+  
+	// 	  nextIndicator.classList.add(classes.indicatorActive);
+	// 	  nextIndicator.setAttribute('aria-selected', true);
+	// 	  nextIndicator.firstElementChild.setAttribute('aria-current', true);
+	// 	}, this);
+	//   },
+  
 
 	toggle_description: function () {
 		// document.querySelectorAll(".product-description p").forEach((each_para) => {
