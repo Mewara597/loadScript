@@ -60,8 +60,8 @@ const MAIN_OBJ = {
 			MAIN_OBJ.global_var.show_soldout
 				? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
 				: each_response_obj.available
-					? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
-					: console.log(`${each_response_obj.handle} product is soldOut`);
+				? required_div_arr.push(MAIN_OBJ.create_div_to_show(each_response_obj))
+				: console.log(`${each_response_obj.handle} product is soldOut`);
 		});
 
 		/** filter array with limit */
@@ -78,10 +78,11 @@ const MAIN_OBJ = {
 
 		MAIN_OBJ.change_featured_image_on_event(json_obj);
 
-		MAIN_OBJ.create_popup(json_obj_with_id);
+		MAIN_OBJ.open_modal(json_obj_with_id);
 
 		// MAIN_OBJ.on_mouseOver(json_obj_with_id);
 	},
+
 	/**create div for each Json Obj */
 	create_div_to_show: function (each_response_obj) {
 		console.log(each_response_obj);
@@ -117,11 +118,9 @@ const MAIN_OBJ = {
 
 			feature_image: `<div class='featured_image' onmouseover = "MAIN_OBJ.mouse_over(this)" onmouseout = "MAIN_OBJ.mouse_out(this)" > 
 								<img id= '${each_response_obj.id}' src ='${featured_image}' " width='100px' height='100px'  >
-								<div id='quick-view-${each_response_obj.id}' value='${each_response_obj.id}' style="display:none; position: relative;
-								top: -60px;
-								background: aliceblue;
-								cursor:pointer;
-								border: 2px solid black;">quick view</div>
+								<div id='quick-view-${each_response_obj.id}' value='${each_response_obj.id}' style="display: none; 
+								position: relative; top: -60px; background: rgb(229, 218, 172);
+								cursor: pointer; border: 2px solid rgba(117, 85, 85, 0.36); border-radius: 27px;"> quick view</div>
 								
 							</div>`,
 		};
@@ -165,11 +164,11 @@ const MAIN_OBJ = {
 				each_var.id == value_of_opt
 					? each_var.featured_image
 						? ((document.querySelector(`.${json_ob.handle} img`).src = each_var.featured_image.src),
-							console.log(value_of_opt),
-							(got_id = true))
+						  console.log(value_of_opt),
+						  (got_id = true))
 						: ((document.querySelector(`.${json_ob.handle} img`).src = json_ob.featured_image),
-							console.log(value_of_opt),
-							(got_id = true))
+						  console.log(value_of_opt),
+						  (got_id = true))
 					: "";
 			});
 		});
@@ -179,29 +178,36 @@ const MAIN_OBJ = {
 		const x = obj.querySelector("img");
 		document.querySelector(`#quick-view-${x.id}`).style.display = "block";
 	},
+
 	mouse_out: function (obj) {
 		const x = obj.querySelector("img");
 		document.querySelector(`#quick-view-${x.id}`).style.display = "none";
 	},
 
-	create_popup: function (json_obj_with_id) {
+	open_modal: function (json_obj_with_id) {
 		document.querySelectorAll("[id^='quick-view-']").forEach((button) => {
 			button.addEventListener("click", (event) => {
 				let object_id = event.currentTarget.id.split("-")[2];
-				MAIN_OBJ.modal_content(object_id, json_obj_with_id);
-				document.querySelector('.show-modal').style.visibility = 'visible';
+				MAIN_OBJ.create_modal(object_id, json_obj_with_id);
+				document.querySelector(".show-modal").style.visibility = "visible";
+				// document.querySelector(".shopify-section").style.visibility = "hidden";
+
 				MAIN_OBJ.close_modal();
-				MAIN_OBJ.change_feature_image_on_click()
+				MAIN_OBJ._set_slider();
+				MAIN_OBJ.change_feature_image_on_click();
 			});
 			// console.log((button.disabled = true));
 		});
 	},
-	close_modal:function(){
-		document.querySelector('.close-button').addEventListener('click',()=>{
-			document.querySelector('.show-modal').remove()
-		})
+
+	close_modal: function () {
+		document.querySelector(".close-button").addEventListener("click", () => {
+			document.querySelector(".show-modal").remove();
+			document.querySelector(".shopify-section").style.visibility = "visible";
+		});
 	},
-	modal_content: function (object_id, json_obj_with_id) {
+
+	create_modal: function (object_id, json_obj_with_id) {
 		let each_response_obj = json_obj_with_id[object_id];
 		console.log(each_response_obj);
 
@@ -210,32 +216,72 @@ const MAIN_OBJ = {
 		opacity: 1;
 		visibility: hidden;
 		transform: scale(1.0);
-		transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;'>
+		transition: visibility 0s linear 5s, opacity 0.25s 0s, transform 0.25s;'>
 		<div class="modal-content" style=' position: absolute;top: 37%;left: 50%;transform: translate(-50%, -50%);background-color: white;padding: 1rem 1.5rem;width: 35rem;border-radius: 0.5rem;'>
 			<span class="close-button" style="float: right;width: 1.5rem;line-height: 1.5rem;text-align: center;cursor: pointer;border-radius: 0.25rem;background-color: lightgray;">&times;</span>
 			<div class='product-detail-div' style="display: flex;">
-				<div class='right-content-div'>
-					<div class = 'main-image-div'>	
-					<img src='${each_response_obj.featured_image}' style='height=100px; width:80px'>
+				<div class='right-content-div' style='208px'>
+					<div class = 'main-image-div' >	
+					<img src='${each_response_obj.featured_image}' style='height:67px; width:80px'>
 					</div>
-					<div class ='variant-image-div' style="width: 189px;"> 
-					${each_response_obj.images.map((img_src,index) => `<img  src=${img_src} media-index=${index} style='height:60px;width: 50px;padding: 2px;'>`).join("")}
+					<div class ='variant-image-div' > 	
+
+						<section class="slider-wrapper" style='margin:1rem;  overflow:hidden;'>
+								<p class="slide-arrow" id="slide-arrow-prev" style='position: absolute;left:10px; padding-left:.25rem;
+								display: flex; top: -4%;bottom: 0;margin: auto;height: 11rem;font-size: 3rem;cursor: pointer;'>&#8249;</p>
+							
+								<p class="slide-arrow" id="slide-arrow-next" style='position: absolute;padding-left:75rem;
+								display: flex;top: -4%;bottom: 0;margin: auto;height: 11rem;
+								font-size: 3rem;padding: 0;cursor: pointer;margin-left: 176px;'>&#8250;	</p>
+
+							<ul class='slides-container' id='slides-container' style='	height: calc(22vh - 2rem);
+							width: 334%;
+							display: flex;
+							list-style: none;
+							margin: 0;
+							padding: 0;
+							overflow: hidden;
+							scroll-behavior: smooth;
+							flex-wrap: nowrap;
+							margin-right: -19px;scroll-behavior: smooth;
+
+							'>
+									${each_response_obj.images
+										.map(
+											(img_src, index) =>
+												`<li class='slide' media-index=${index} style='width:100%; height:100%; flex:1 0 10%;'> <img  src=${img_src} media-index=${index} style='height:60px;width: 50px;padding: 2px;'> </li>`
+										)
+										.join("")}
+							</ul>
+						</section>
+					
 					</div>
+			
 				</div>
 				<div class='left-content-div'>
 					<div class='product-detail' >
-						<div class='product-description-div' style="overflow: overlay;height: 172px;width: 232px;">
+						<div class='product-description-div' style="overflow: overlay;height: 172px;width: 250px; margin-left:20px">
 							<span>
-								description: ${each_response_obj.description}
+								<b>description</b>: ${each_response_obj.description}
 							</span>
-						</div>
-						<div class='price-description-div' style="margin-top: 10px;">
 							
 						</div>
-
+						<div class='price-description-div' style="margin-top: 10px;width: 248px;">
+						<b><span>${each_response_obj.handle}</span></b>
+						<br><br>
+								<span class='price' style='display: flex;flex-direction: row;'> <mark style="margin-right: 10px; color:red;"><b> RS: ${
+									each_response_obj.price
+								}<b> </mark> ${
+			each_response_obj.compare_at_price == null ? " " : ` <del> RS: ${each_response_obj.compare_at_price}</del>`
+		} </span>
+						</div>
+					</div>
+				
+					<div class='cart-btn-div' style="padding-top: 24px;width: 192px;">
+						<button class='add-cart-btn' style="width: 249px;background-color: aliceblue;">Add to cart</button>
+						<button class='buy-product-btn' style="width: 249px;background-color: black;color:white">Buy it now</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>`;
@@ -248,50 +294,31 @@ const MAIN_OBJ = {
 	},
 
 	change_feature_image_on_click: function () {
-		document.querySelectorAll(".variant-image-div img").forEach((img_tag) => {
-			// console.log(img_tag)
-			img_tag.addEventListener("click", (event) => {
-				console.log(event.currentTarget.getAttribute('media-index'));
-				// MAIN_OBJ._setActiveIndicator(event.currentTarget.getAttribute('media-index'))
-				// event.currentTarget.style.border = '2px solid black';
-				document.querySelector(".main-image-div img").src = event.currentTarget.src;
-			});
+		document.querySelector(".slides-container").addEventListener("click", (event) => {
+			// event.target.src;
+			event.target.src ? document.querySelector(".main-image-div img").src = event.target.src : console.log('click at image '); 
+			;
 		});
 	},
 
-	// _setActiveIndicator: function(index) {
-	// 	this.indicators.forEach(function(indicatorWrapper) {
-	// 	  var activeIndicator = indicatorWrapper.querySelector(
-	// 		'.' + classes.indicatorActive
-	// 	  );
-  
-	// 	  var nextIndicator = indicatorWrapper.childNodes[index];
-  
-	// 	  if (activeIndicator) {
-	// 		activeIndicator.setAttribute('aria-selected', false);
-	// 		activeIndicator.classList.remove(classes.indicatorActive);
-	// 		activeIndicator.firstElementChild.removeAttribute('aria-current');
-	// 	  }
-  
-	// 	  nextIndicator.classList.add(classes.indicatorActive);
-	// 	  nextIndicator.setAttribute('aria-selected', true);
-	// 	  nextIndicator.firstElementChild.setAttribute('aria-current', true);
-	// 	}, this);
-	//   },
-  
-
-	toggle_description: function () {
-		// document.querySelectorAll(".product-description p").forEach((each_para) => {
-		// 	each_para.style.display = "block";
-		// 	console.log(document.querySelector(".show-hide"));
-		// 	document.querySelector(".show-hide").addEventListener("click", (event) => {
-		// 		console.log(event.target);
-		// 	});
-		// 	document.querySelector(".product-description p").style.display == "block"
-		// 		? (document.querySelector(".product-description p").style.display = "none")
-		// 		: (document.querySelector(".product-description p").style.display = "block");
-		// });
+	show_border_on_selected: function () {
+		document.querySelectorAll(".variant-image-div img").forEach((each_img) => {
+			each_img.style.border = "" ? "" : (each_img.style.border = "");
+		});
 	},
+
+	_set_slider: function () {
+		document.querySelector("#slide-arrow-next").addEventListener("click", (event) => {
+			// console.log(event.target);
+			let slide_width = 3*(document.querySelector(".slide").clientWidth);
+			document.querySelector(".slides-container").scrollLeft += slide_width;
+		});
+		document.querySelector("#slide-arrow-prev").addEventListener("click", (event) => {
+			let slide_width = 3*(document.querySelector(".slide").clientWidth);
+			document.querySelector(".slides-container").scrollLeft -= slide_width;
+		});
+	},
+
 };
 (function () {
 	MAIN_OBJ.init();
