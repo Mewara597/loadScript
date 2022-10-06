@@ -234,7 +234,7 @@ const MAIN_OBJ = {
 								display: flex;top: -4%;bottom: 0;margin: auto;height: 11rem;
 								font-size: 3rem;padding: 0;cursor: pointer;margin-left: 176px;'>&#8250;	</p>
 
-							<ul class='slides-container' id='slides-container' style='	height: calc(22vh - 2rem);
+							<ul class='slides-container' id='slides-container' style='	height: 71pxgit commit;
 							width: 334%;
 							display: flex;
 							list-style: none;
